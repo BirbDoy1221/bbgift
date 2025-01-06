@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <style>
+        body { margin: 0; background-color: black;}
+        canvas { display: block; }
+        h1 { color: white; text-align: center; margin-top: 20%; font-size: 3em; }
+        p { color: white; text-align: center; font-size: 1.5em; }
+        h3 { color: white; text-align: center; font-size: 1.5em; }
+    </style>
+</head>
+<body>
+    <h1>HAPPY BIRTHDAY BB!</h1>
+    <p><em>May this rose be a symbol of our undying love for each other.</em></p>
+    <h3>One of the pros it digital rose: you can bring it anywhere hehe</h3>
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
+        import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
+
+        // Create a scene
+        const scene = new THREE.Scene();
+
+        // Create a camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        // Create a renderer
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000); // Set background color to black
+        document.body.appendChild(renderer.domElement);
+
+        // Load a 3D model
+        const loader = new GLTFLoader();
+        let model;
+        loader.load('./red_rose/scene.gltf', function (gltf) {
+            model = gltf.scene;
+            scene.add(model);
+            model.rotation.z -= 0.1;
+            animate();
+        }, undefined, function (error) {
+            console.error(error);
+        });
+
+
+        // Add lighting
+        const light = new THREE.AmbientLight(0xFFFFFF); // soft white light
+        scene.add(light);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            if (model) {
+                model.rotation.y += 0.01;
+            }
+            renderer.render(scene, camera);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Start the animation
+        animate();
+    </script>
+</body>
+</html>
